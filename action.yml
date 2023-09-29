@@ -8,8 +8,8 @@ inputs:
     description: 'Codecov static token'
     required: true
   output_path:
-    description: 'output path for test file in container'
-    default: 'tests_to_run'
+    description: 'output path for test file in container, must be a fully qualified path'
+    default: '/tmp/tests_to_run'
     required: false
   local_output_path:
     description: 'where to copy the file out of the container'
@@ -38,7 +38,7 @@ runs:
       shell: bash
     - run: ${{ steps.command.outputs.command }} ls
       shell: bash
-    - run: docker cp ${{ inputs.container }}:/${{ inputs.output_path }} ${{ inputs.local_output_path }}
+    - run: docker cp ${{ inputs.container }}:${{ inputs.output_path }} ${{ inputs.local_output_path }}
       shell: bash
     - run: echo tests=$(cat ${{ inputs.local_output_path }}) >> $GITHUB_OUTPUT
       shell: bash
