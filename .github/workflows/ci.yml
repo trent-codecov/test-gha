@@ -20,6 +20,9 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
       - name: DC up
         run: docker-compose up -d
+      - name: PS
+        run: |
+          docker ps
       - id: test
         uses: trent-codecov/test-gha@main
         with:

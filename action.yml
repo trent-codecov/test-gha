@@ -8,14 +8,14 @@ inputs:
 outputs:
   random-number:
     description: "Random number"
-    value: ${{ steps.random-number-generator.outputs.random-number }}
+    value: 1
 runs:
   using: "composite"
   steps:
     - run: echo Hello ${{ inputs.who-to-greet }}.
       shell: bash
-    - id: random-number-generator
-      run: echo "random-number=$(echo $RANDOM)" >> $GITHUB_OUTPUT
+    - id: ps
+      run: docker ps
       shell: bash
     - run: docker exec test-gha-app-1 ls
       shell: bash
