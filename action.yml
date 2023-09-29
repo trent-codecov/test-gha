@@ -17,5 +17,5 @@ runs:
     - id: container-running
       run: docker ps | grep ${{ inputs.container }}
       shell: bash
-    - run: ${{ steps.random-number-generator.outputs.random-number }} ls
+    - run: ${{ steps.command.outputs.command }} ls
       shell: bash
