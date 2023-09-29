@@ -1,10 +1,9 @@
-name: 'Hello World'
-description: 'Greet someone'
+name: 'ATS'
+description: 'RUN ATS'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
-    required: true
-    default: 'World'
+  container:
+    description: 'container to run in'
+    required: false
 outputs:
   random-number:
     description: "Random number"
@@ -12,10 +11,11 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - run: echo Hello ${{ inputs.who-to-greet }}.
+    - run: echo command="docker exec ${{ inputs.container }}" >> $GITHUB_OUTPUT
+      id: command
       shell: bash
-    - id: ps
-      run: docker ps
+    - id: container-running
+      run: docker ps | grep ${{ inputs.container }}
       shell: bash
-    - run: docker exec test-gha-app-1 ls
+    - run: ${{ steps.random-number-generator.outputs.random-number }} ls
       shell: bash
