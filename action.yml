@@ -36,6 +36,8 @@ runs:
       shell: bash
     - run: ${{ steps.command.outputs.command }} sed -i 's/\s\+/\n/g' ${{ inputs.output_path }}
       shell: bash
+    - run: ${{ steps.command.outputs.command }} ls
+      shell: bash
     - run: docker cp ${{ inputs.container }}:${{ inputs.output_path }} ${{ inputs.local_output_path }}
       shell: bash
     - run: echo tests=$(cat ${{ inputs.local_output_path }}) >> $GITHUB_OUTPUT
