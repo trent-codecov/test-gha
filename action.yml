@@ -17,5 +17,5 @@ runs:
     - id: random-number-generator
       run: echo "random-number=$(echo $RANDOM)" >> $GITHUB_OUTPUT
       shell: bash
-    - run: docker ps
+    - run: docker exec test-gha-app-1 ls
       shell: bash
