@@ -26,4 +26,4 @@ jobs:
       - id: test
         uses: trent-codecov/test-gha@main
         with:
-          who-to-greet: 'Mona the Octocat'
+          container: 'test-gha-app-1'
