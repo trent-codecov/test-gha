@@ -3,11 +3,22 @@ description: 'RUN ATS'
 inputs:
   container:
     description: 'container to run in'
+    required: true
+  static_token:
+    description: 'Codecov static token'
+    required: true
+  output_path:
+    description: 'output path for test file in container'
+    default: 'tests_to_run'
+    required: false
+  local_output_path:
+    description: 'where to copy the file out of the container'
+    default: 'tests_to_run'
     required: false
 outputs:
-  random-number:
-    description: "Random number"
-    value: 1
+  tests-to-run:
+    description: "the tests to run"
+    value: ${{ steps.tests.outputs.tests }}
 runs:
   using: "composite"
   steps:
@@ -17,5 +28,16 @@ runs:
     - id: container-running
       run: docker ps | grep ${{ inputs.container }}
       shell: bash
-    - run: ${{ steps.command.outputs.command }} ls
+    - run: ${{ steps.command.outputs.command }} pip install codecov-cli
       shell: bash
+    - run: ${{ steps.command.outputs.command }} codecovcli label-analysis --base-sha=$(git merge-base HEAD^ origin/main) --token=${{inputs.static_token}} --dry-run --dry-run-output-path=${{ inputs.output_path }}
+      shell: bash
+    - run: ${{ steps.command.outputs.command }} sed -i 's/--cov-context=test//g' ${{ inputs.output_path }}
+      shell: bash
+    - run: ${{ steps.command.outputs.command }} sed -i 's/\s\+/\n/g' ${{ inputs.output_path }}
+      shell: bash
+    - run: docker cp ${{ inputs.container }}:${{ inputs.output_path }} ${{ inputs.local_output_path }}
+      shell: bash
+    - run: echo tests=$(cat ${{ inputs.local_output_path }}) >> $GITHUB_OUTPUT
+      shell: bash
+      id: tests
